@@ -1,0 +1,84 @@
+These instructions have been tested on Ubuntu 14.04LTS.
+Android builds require a 64-bit install.  You should read through all the
+material at https://source.android.com/source/building.html (and everything
+at https://source.android.com/source/ if you can). At least 6 GB RAM is required for 
+building Android using JACK server.
+
+
+1. Install all the tools as described for your system at
+   https://source.android.com/source/building.html
+
+2. Install all the AOSP sources as described at
+   https://source.android.com/source/building.html and in the Freescale document
+   Android_User's_Guide.pdf Chapter 3.  
+
+3. Install the UIB sources.  I currently maintain three github repositories
+   for the linux kernel, uboot, and Android modifications for the UIB.  Assuming
+   $ANDROID is the location of your Android source tree:
+
+# in kernel_imx
+cd $ANDROID/kernel_imx
+cat <<EOF >> .git/config
+[remote "apdash"]
+    url = https://github.com/ambikadash/linux-fqt.git
+    fetch = +refs/heads/*:refs/remotes/apdash/*
+[branch "kk4.4.2_1.0.0-ga-uib"]
+    remote = apdash
+    merge = refs/heads/mm6.0.1_1.0.0-ga_uib
+EOF
+git pull apdash
+git checkout mm6.0.1_1.0.0-ga_uib
+
+# in bootable/bootloader/uboot-imx
+cd $ANDROID/bootable/bootloader/uboot-imx
+cat <<EOF >> .git/config
+[remote "apdash"]
+        url = https://github.com/ambikadash/uboot-imx-fqt.git
+        fetch = +refs/heads/*:refs/remotes/apdash/*
+[branch "mm6.0.1_1.0.0-ga_uib"]
+        remote = apdash
+        merge = refs/heads/mm6.0.1_1.0.0-ga_uib
+EOF
+git pull apdash
+git checkout mm6.0.1_1.0.0-ga_uib
+
+# in device/fsl
+cd $ANDROID/device/fsl
+cat <<EOF >> .git/config
+[remote "apdash"]
+        url = https://github.com/ambikadash/android-device-fsl.git
+        fetch = +refs/heads/*:refs/remotes/apdash/*
+[branch "imx_M6.0.1_1.0.0_uib"]
+	remote = apdash
+	merge = refs/heads/imx_M6.0.1_1.0.0_uib
+EOF
+git pull apdash
+git checkout imx_M6.0.1_1.0.0_uib
+
+4. Run the "envsetup.sh" script in build to set up the Android build environment
+   variables:
+
+ . build/envsetup.sh
+
+   (Note the syntax: a period followed by a space and the script.)
+
+5. Run the "lunch" command to select the sabresd_6dq-eng target.
+
+ lunch sabresd_6dq-eng
+
+6. Build (note: set -jN where N == the number of cores on your CPU):
+
+ make -j4
+
+7. Android system customizations should go into device/fsl/imx6/imx6.mk,
+   device/fsl/imx6/sabresd_6dq.mk, or the files in device/fsl/sabresd_6dq/.  New apps
+   should be added to PRODUCT_PACKAGES and new files (e.g., the boot animation)
+   added to PRODUCT_COPY_FILES.  Any time a package is added, renamed, or
+   removed, a "make installclean" should be performed to remove the disk image
+   files and packages from previous builds before creating a new build.
+
+8. Build images are placed in the out/target/product/sabresd_6dq directory.
+   The UIB uboot binary for the DualLite is u-boot.imx. 
+
+9. To Flash the UIB using the kitkat emmc-writer, convert the system.img to raw image using
+   simg2img utility located at out/host/linux-x86/bin/simg2img. Use boot-imx6dl.img and recovery-imx6dl.img
