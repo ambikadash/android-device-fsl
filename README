@@ -22,7 +22,7 @@ cat <<EOF >> .git/config
 [remote "apdash"]
     url = https://github.com/ambikadash/linux-fqt.git
     fetch = +refs/heads/*:refs/remotes/apdash/*
-[branch "kk4.4.2_1.0.0-ga-uib"]
+[branch "mm6.0.1_1.0.0-ga_uib"]
     remote = apdash
     merge = refs/heads/mm6.0.1_1.0.0-ga_uib
 EOF
