@@ -347,7 +347,7 @@ PRODUCT_COPY_FILES +=	\
 	device/fsl/common/input/Dell_Dell_USB_Keyboard.idc:system/usr/idc/Dell_Dell_USB_Keyboard.idc \
 	device/fsl/common/input/eGalax_Touch_Screen.idc:system/usr/idc/eGalax_Touch_Screen.idc \
 	device/fsl/common/input/eGalax_Touch_Screen.idc:system/usr/idc/HannStar_P1003_Touchscreen.idc \
-	device/fsl/common/input/eGalax_Touch_Screen.idc:system/usr/idc/Novatek_NT11003_Touch_Screen.idc \
+	device/fsl/common/input/eGalax_Touch_Screen.idc:system/usr/idc/SSD2543_Touch_Screen.idc \
 	system/core/rootdir/init.rc:root/init.rc \
 	device/fsl/imx6/etc/apns-conf.xml:system/etc/apns-conf.xml \
 	device/fsl/imx6/etc/init.usb.rc:root/init.freescale.usb.rc \
@@ -358,6 +358,8 @@ PRODUCT_COPY_FILES +=	\
 	device/fsl/common/display/display_mode_fb0.conf:system/etc/display_mode_fb0.conf \
 	device/fsl/common/display/display_mode_fb2.conf:system/etc/display_mode_fb2.conf \
 	device/fsl/common/display/display_mode_fb4.conf:system/etc/display_mode_fb4.conf \
+	device/fsl/sabresd_6dq/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl \
+        device/fsl/sabresd_6dq/SSD2543_Touch_Screen.kl:system/usr/keylayout/SSD2543_Touch_Screen.kl \
     device/fsl-proprietary/media-profile/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     device/fsl-proprietary/media-profile/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
     device/fsl-proprietary/media-profile/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
@@ -369,7 +371,7 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 
 # for property
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	persist.sys.usb.config=mtp
+	persist.sys.usb.config=rndis
 
 #this must be set before including tablet-7in-hdpi-1024-dalvik-heap.mk
 PRODUCT_PROPERTY_OVERRIDES += \

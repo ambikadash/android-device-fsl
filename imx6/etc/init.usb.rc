@@ -28,15 +28,41 @@ on fs
     mount functionfs adb /dev/usb-ffs/adb uid=2000,gid=2000
     write /sys/class/android_usb/android0/f_ffs/aliases adb
 
+service usb_ifup /system/bin/sh -c "ifconfig rndis0 192.168.0.2 netmask 255.255.255.0"
+        disabled
+        oneshot
+
+service pcapserver /system/xbin/pcapserver
+    disabled
+    oneshot
+
 # USB rndis configuration
 on property:sys.usb.config=rndis
-    stop adbd
     write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 18d1
-    write /sys/class/android_usb/android0/idProduct 4e23
+    write /sys/class/android_usb/android0/idVendor 2650
+    write /sys/class/android_usb/android0/idProduct 0128
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/bDeviceClass 224
     write /sys/class/android_usb/android0/enable 1
+    start usb_ifup
+    #setprop FieryIP 192.168.0.1
+    setprop FieryIP "NotSet"
+    start pcapserver
+    setprop sys.usb.state ${sys.usb.config}
+
+# USB rndis,adb configuration
+on property:sys.usb.config=rndis,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 2650
+    write /sys/class/android_usb/android0/idProduct 0128
+    write /sys/class/android_usb/android0/functions ${sys.usb.config}
+    write /sys/class/android_usb/android0/bDeviceClass 224
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    start usb_ifup
+    #setprop FieryIP 192.168.0.1
+    setprop FieryIP "NotSet"
+    start pcapserver
     setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp
