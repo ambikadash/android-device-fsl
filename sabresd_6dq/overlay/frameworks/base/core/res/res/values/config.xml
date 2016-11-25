@@ -73,7 +73,7 @@
         <item>"ethernet,9,9,2,-1,true"</item>
     </string-array>
 
-    <bool name="config_automatic_brightness_available">true</bool>
+    <bool name="config_automatic_brightness_available">false</bool>
 
     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 zones as follows:
@@ -168,7 +168,9 @@
         <item>0</item>
     </integer-array>
 
-    <integer name="config_screenBrightnessDim">5</integer>
+    <integer name="config_screenBrightnessDim">10</integer>
+
+    <integer name="config_screenBrightnessDark">10</integer>
 
     <!-- Base "touch slop" value used by ViewConfiguration as a
          movement threshold where scrolling should begin. -->
@@ -225,5 +227,49 @@
     <!-- If true, the doze component is not started until after the screen has been
          turned off and the screen off animation has been performed. -->
     <bool name="config_dozeAfterScreenOff">true</bool>
+
+    <!-- User activity timeout: Minimum screen off timeout in milliseconds.
+
+         Sets a lower bound for the {@link Settings.System#SCREEN_OFF_TIMEOUT} setting
+         which determines how soon the device will go to sleep when there is no
+         user activity.
+
+         This value must be greater than zero, otherwise the device will immediately
+         fall asleep again as soon as it is awoken.
+    -->
+    <integer name="config_minimumScreenOffTimeout">120000</integer>
+
+    <!-- User activity timeout: Maximum screen dim duration in milliseconds.
+
+         Sets an upper bound for how long the screen will dim before the device goes
+         to sleep when there is no user activity.  The dim duration is subtracted from
+         the overall screen off timeout to determine the screen dim timeout.
+         When the screen dim timeout expires, the screen will dim, shortly thereafter
+         the device will go to sleep.
+
+         If the screen off timeout is very short, the dim duration may be reduced
+         proportionally.  See config_maximumScreenDimRatio.
+
+         This value may be zero in which case the screen will not dim before the
+         device goes to sleep.
+    -->
+    <integer name="config_maximumScreenDimDuration">3000</integer>
+
+    <!-- User activity timeout: Maximum screen dim duration as a percentage of screen off timeout.
+
+         This resource is similar to config_maximumScreenDimDuration but the maximum
+         screen dim duration is defined as a ratio of the overall screen off timeout
+         instead of as an absolute value in milliseconds.  This is useful for reducing
+         the dim duration when the screen off timeout is very short.
+
+         When computing the screen dim duration, the power manager uses the lesser
+         of the effective durations expressed by config_maximumScreenDimDuration and
+         config_maximumScreenDimRatio.
+
+         This value must be between 0% and 100%.  If the value is zero, the screen will not
+         dim before the device goes to sleep.
+    -->
+    <fraction name="config_maximumScreenDimRatio">0%</fraction>
+
 
 </resources>
